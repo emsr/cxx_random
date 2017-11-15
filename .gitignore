@@ -1,0 +1,5 @@
+test_uniform_inside_triangle_distribution
+test_uniform_inside_tetrahedron_distribution
+
+tris.iv
+tetras.iv
