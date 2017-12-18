@@ -32,7 +32,7 @@ template<typename Tp>
     ///  Type of datum.
     using value_type = Tp;
     ///  Type for sizes.
-    using size_type = std::size_t;
+    using size_type = std::intptr_t;
 
     class iterator
     {
@@ -83,10 +83,27 @@ template<typename Tp>
         return __temp;
       }
 
-      //bin&
-      //operator*()
+      value_type&
+      operator*()
+      { return this->m_histogram->_M_bin[this->m_index]; }
+
+      const value_type&
+      operator*() const
+      { return this->m_histogram->_M_bin[this->m_index]; }
+
+      bool
+      operator==(const iterator& iter)
+      {
+	return this->m_histogram == iter.m_histogram
+	    && this->m_index == iter.m_index;
+      }
+
+      bool
+      operator!=(const iterator& iter)
+      { return !this->operator==(iter); }
 
     private:
+
       size_type m_index = -1;
       histogram<Tp> * m_histogram = nullptr;
     };
