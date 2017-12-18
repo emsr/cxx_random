@@ -1,6 +1,7 @@
 #include <array>
 #include <cmath>
 #include <iostream>
+#include <iomanip>
 #include <random>
 #include "../histogram.h"
 
@@ -16,12 +17,16 @@ main()
   std::poisson_distribution<int> distribution(157.17);
   histogram<int> hist(140, 90, 230);
 
-  for (int i = 0; i < 1.0e8; ++i)
+  const auto max = 1.0e8;
+  for (int i = 0; i < max; ++i)
   {
     const int number = distribution(engine);
     hist << number;
   }
-  int k = 1;
+  int k = 0;
   for (const auto& bin : hist)
-    std::cout << hist.lower_bound(k++) << ' ' << bin << ' ' << bin / 1.0e8 << '\n';
+    std::cout << ' ' << std::setw(4) << hist.lower_bound(++k)
+	      << ' ' << std::setw(8) << bin
+	      << ' ' << std::setw(12) << bin / max
+	      << '\n';
 }
