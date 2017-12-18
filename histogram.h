@@ -50,10 +50,14 @@ template<typename Tp>
       iterator
       operator++()
       {
-        if (this->m_index == m_histogram->_M_bin.size() - 1) // Right tail
-          this->m_index = static_cast<size_type>(-1);
-        else
-          ++this->m_index;
+	const auto done = static_cast<size_type>(-1);
+	if (this->m_index != done)
+	  {
+            if (this->m_index == m_histogram->_M_bin.size() - 1) // Right tail
+              this->m_index = done;
+            else
+              ++this->m_index;
+	  }
         return *this;
       }
 
@@ -68,10 +72,14 @@ template<typename Tp>
       iterator
       operator--()
       {
-        if (this->m_index == 0 || this->m_index = static_cast<size_type>(-1))
-          this->m_index = static_cast<size_type>(-1); // What should we do?  Whis maybe shouldn't be end.
-        else
-          --this->m_index;
+	const auto done = static_cast<size_type>(-1);
+	if (this->m_index != done)
+	  {
+            if (this->m_index == 0 || this->m_index == done)
+              this->m_index = done;
+            else
+              --this->m_index;
+	  }
         return *this;
       }
 
@@ -83,19 +91,25 @@ template<typename Tp>
         return __temp;
       }
 
-      value_type&
+      size_type
       operator*()
-      { return this->m_histogram->_M_bin[this->m_index]; }
+      { return this->m_histogram->value(this->m_index); }
 
-      const value_type&
-      operator*() const
-      { return this->m_histogram->_M_bin[this->m_index]; }
+      std::pair<value_type, value_type>
+      bin() const
+      {
+	const auto k = this->m_index;
+	return std::make_pair(this->m_histogram->lower_bound(k),
+			      this->m_histogram->upper_bound(k));
+      }
 
       bool
       operator==(const iterator& iter)
       {
-	return this->m_histogram == iter.m_histogram
-	    && this->m_index == iter.m_index;
+	const auto done = static_cast<size_type>(-1);
+	return (this->m_index == done && iter.m_index == done)
+	    || (this->m_histogram == iter.m_histogram
+		&& this->m_index == iter.m_index);
       }
 
       bool
@@ -105,7 +119,8 @@ template<typename Tp>
     private:
 
       size_type m_index = -1;
-      histogram<Tp> * m_histogram = nullptr;
+
+      histogram<Tp>* const m_histogram = nullptr;
     };
 
     /**
@@ -318,9 +333,9 @@ template<typename Tp>
      *  @param[in]  i  The bin index.
      *  @return  The left boundary value of the bin.
      */
-    value_type
+    size_type
     value(size_type i) const noexcept
-    { return this->_M_bin[i - 1]; }
+    { return this->_M_count[i - 1]; }
 
     /**
      *  @brief  Return the left value of the ith bin where 1 <= i <= size().
