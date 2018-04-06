@@ -117,11 +117,11 @@ template<class RealTp = double>
     { };
 
     uniform_inside_tetrahedron_distribution()
-    : _M_urd()
+    : _M_urd(std::numeric_limits<RealTp>::min(), RealTp{1})
     { }
 
     uniform_inside_tetrahedron_distribution(param_type)
-    : _M_urd()
+    : _M_urd(std::numeric_limits<RealTp>::min(), RealTp{1})
     { }
 
     param_type
