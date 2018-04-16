@@ -27,26 +27,26 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
    * The Dirichlet distribution is a multi-variate beta distribution over
    * k-dimensional simplices.
    */
-  template<std::size_t _Dimen, typename _RealType = double>
+  template<std::size_t _Dim, typename _RealTp = double>
     class dirichlet_distribution
     {
-      static_assert(std::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealTp>::value,
 		    "template argument not a floating point type");
-      static_assert(_Dimen != 0, "dimension is zero");
+      static_assert(_Dim != 0, "dimension is zero");
 
     public:
       /** The type of the range of the distribution. */
-      typedef std::array<_RealType, _Dimen> result_type;
+      typedef std::array<_RealTp, _Dim> result_type;
       /** Parameter type. */
       class param_type
       {
 
       public:
-	typedef dirichlet_distribution<_Dimen, _RealType> distribution_type;
-	friend class dirichlet_distribution<_Dimen, _RealType>;
+	typedef dirichlet_distribution<_Dim, _RealTp> distribution_type;
+	friend class dirichlet_distribution<_Dim, _RealTp>;
 
 	param_type()
-	{ std::fill(_M_alpha.begin(), _M_alpha.end(), _RealType(1)); }
+	{ std::fill(_M_alpha.begin(), _M_alpha.end(), _RealTp{1}); }
 
 	template<typename _ForwardIterator1>
 	  param_type(_ForwardIterator1 __alphabegin,
@@ -55,18 +55,18 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
 	  __glibcxx_function_requires(_ForwardIteratorConcept<
 				      _ForwardIterator1>)
 	  _GLIBCXX_DEBUG_ASSERT(std::distance(__alphabegin, __alphaend)
-				== _Dimen);
+				<= _Dim);
 
 	  _M_init(__alphabegin, __alphaend);
 	}
 
-	param_type(std::initializer_list<_RealType> __alpha)
+	param_type(std::initializer_list<_RealTp> __alpha)
 	{
-	  _GLIBCXX_DEBUG_ASSERT(__alpha.size() == _Dimen);
+	  _GLIBCXX_DEBUG_ASSERT(__alpha.size() <= _Dim);
 	  _M_init(__alpha.begin(), __alpha.end());
 	}
 
-	std::array<_RealType, _Dimen>
+	std::array<_RealTp, _Dim>
 	alpha() const
 	{ return _M_alpha; }
 
@@ -79,11 +79,11 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
 	{ return !(__p1 == __p2); }
 
       private:
-	template <typename _InputIterator1, typename _InputIterator2>
+	template <typename _InputIterator1>
 	  void _M_init(_InputIterator1 __alphabegin,
 		       _InputIterator1 __alphaend);
 
-	std::array<_RealType, _Dimen> _M_alpha;
+	std::array<_RealTp, _Dim> _M_alpha;
       };
 
     public:
@@ -91,14 +91,14 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
       : _M_param(), _M_gd()
       { }
 
-      template<typename _ForwardIterator1, typename _ForwardIterator2>
+      template<typename _ForwardIterator1>
 	dirichlet_distribution(_ForwardIterator1 __alphabegin,
 			       _ForwardIterator1 __alphaend)
 	: _M_param(__alphabegin, __alphaend),
 	  _M_gd()
 	{ }
 
-      dirichlet_distribution(std::initializer_list<_RealType> __alpha)
+      dirichlet_distribution(std::initializer_list<_RealTp> __alpha)
       : _M_param(__alpha), _M_gd()
       { }
 
@@ -142,7 +142,7 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
       result_type
       min() const
       { result_type __res;
-	__res.fill(std::numeric_limits<_RealType>::lowest());
+	__res.fill(std::numeric_limits<_RealTp>::lowest());
 	return __res; }
 
       /**
@@ -151,7 +151,7 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
       result_type
       max() const
       { result_type __res;
-	__res.fill(std::numeric_limits<_RealType>::max());
+	__res.fill(std::numeric_limits<_RealTp>::max());
 	return __res; }
 
       /**
@@ -187,13 +187,13 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
        *        the same parameters and the sequences that would
        *        be generated are equal.
        */
-      template<size_t _Dimen1, typename _RealType1>
+      template<size_t _Dimen1, typename _RealTp1>
 	friend bool
 	operator==(const
-		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealType1>&
+		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealTp1>&
 		   __d1,
 		   const
-		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealType1>&
+		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealTp1>&
 		   __d2);
 
       /**
@@ -206,12 +206,12 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
        * @returns The output stream with the state of @p __x inserted or in
        * an error state.
        */
-      template<size_t _Dimen1, typename _RealType1,
+      template<size_t _Dimen1, typename _RealTp1,
 	       typename _CharT, typename _Traits>
 	friend std::basic_ostream<_CharT, _Traits>&
 	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 		   const
-		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealType1>&
+		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealTp1>&
 		   __x);
 
       /**
@@ -224,11 +224,11 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
        * @returns The input stream with @p __x extracted or in an error
        *          state.
        */
-      template<size_t _Dimen1, typename _RealType1,
+      template<size_t _Dimen1, typename _RealTp1,
 	       typename _CharT, typename _Traits>
 	friend std::basic_istream<_CharT, _Traits>&
 	operator>>(std::basic_istream<_CharT, _Traits>& __is,
-		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealType1>&
+		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealTp1>&
 		   __x);
 
     private:
@@ -240,18 +240,18 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
 			const param_type& __p);
 
       param_type _M_param;
-      std::gamma_distribution<_RealType> _M_gd;
+      std::gamma_distribution<_RealTp> _M_gd;
   };
 
   /**
    * @brief Return true if two multi-variate normal distributions are
    * different.
    */
-  template<size_t _Dimen, typename _RealType>
+  template<size_t _Dim, typename _RealTp>
     inline bool
-    operator!=(const __gnu_cxx::dirichlet_distribution<_Dimen, _RealType>&
+    operator!=(const __gnu_cxx::dirichlet_distribution<_Dim, _RealTp>&
 	       __d1,
-	       const __gnu_cxx::dirichlet_distribution<_Dimen, _RealType>&
+	       const __gnu_cxx::dirichlet_distribution<_Dim, _RealTp>&
 	       __d2)
     { return !(__d1 == __d2); }
 

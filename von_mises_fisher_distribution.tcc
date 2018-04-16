@@ -17,11 +17,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   namespace __detail
   {
-    template<typename _RealType, std::size_t _Dim>
+    template<typename _RealTp, std::size_t _Dim>
       void
-      __make_normal(std::array<_RealType, _Dim> &__lambda)
+      __make_normal(std::array<_RealTp, _Dim> &__lambda)
       {
-	_RealType __len{};
+	_RealTp __len{};
 	for (int i = 0; i < _Dim; ++i)
 	  __len += __lambda[i] * __lambda[i];
 	__len = std::sqrt(__len);
@@ -29,10 +29,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  __lambda[i] /=__len;
       }
 
-    template<typename _RealType, std::size_t _Dim>
+    template<typename _RealTp, std::size_t _Dim>
       void
-      __make_basis(const std::array<_RealType, _Dim>& __mu,
-		   std::array<std::array<_RealType, _Dim>, _Dim - 1>& __lambda)
+      __make_basis(const std::array<_RealTp, _Dim>& __mu,
+		   std::array<std::array<_RealTp, _Dim>, _Dim - 1>& __lambda)
       {
 	size_t __max = 0;
 	//  Find the mu pivot element as the largest abs element.
@@ -43,15 +43,15 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	//  the pivot and are orthonormalized wrt pu and teh previous lambdas.
 	for (size_t __i = 0; __i < _Dim - 1; ++__i)
 	  {
-	    __lambda[__i][(__max + __i) % _Dim] = _RealType(1);
+	    __lambda[__i][(__max + __i) % _Dim] = _RealTp(1);
 	    auto __mudot = __mu[(__max + __i) % _Dim];
-	    if (__mudot != _RealType(0))
+	    if (__mudot != _RealTp(0))
 	      for (size_t __j = 0; __j < _Dim; ++__j)
 		__lambda[__i][__j] -= __mudot * __mu[__j];
 		for (size_t __k = 0; __k < __i; ++__k)
 		  {
 		    auto __lambdot = __lambda[__k][(__max + __i) % _Dim];
-		    if (__lambdot != _RealType(0))
+		    if (__lambdot != _RealTp(0))
 		      for (size_t __j = 0; __j < _Dim; ++__j)
 			__lambda[__i][__j] -= __lambdot * __lambda[__k][__j];
 		  }
@@ -60,12 +60,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       }
   }
 
-  template<std::size_t _Dim, typename _RealType>
+  template<std::size_t _Dim, typename _RealTp>
     template<typename _UniformRandomNumberGenerator>
-      typename von_mises_fisher_distribution<_Dim, _RealType>::result_type
-      von_mises_fisher_distribution<_Dim, _RealType>::
+      typename von_mises_fisher_distribution<_Dim, _RealTp>::result_type
+      von_mises_fisher_distribution<_Dim, _RealTp>::
       operator()(_UniformRandomNumberGenerator& __urng,
-		 const typename von_mises_fisher_distribution<_Dim, _RealType>::param_type& __p)
+		 const typename von_mises_fisher_distribution<_Dim, _RealTp>::param_type& __p)
       {
 	std::__detail::_Adaptor<_UniformRandomNumberGenerator, typename result_type::value_type>
 	  __aurng(__urng);
@@ -95,14 +95,14 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	return __res;
       }
 
-  template<std::size_t _Dim, typename _RealType>
+  template<std::size_t _Dim, typename _RealTp>
     template<typename _OutputIterator,
 	     typename _UniformRandomNumberGenerator>
       void
-      von_mises_fisher_distribution<_Dim, _RealType>::
+      von_mises_fisher_distribution<_Dim, _RealTp>::
       __generate_impl(_OutputIterator __f, _OutputIterator __t,
 		      _UniformRandomNumberGenerator& __urng,
-		      const typename von_mises_fisher_distribution<_Dim, _RealType>::param_type& __param)
+		      const typename von_mises_fisher_distribution<_Dim, _RealTp>::param_type& __param)
       {
 	__glibcxx_function_requires(_OutputIteratorConcept<_OutputIterator>)
 
@@ -110,13 +110,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  *__f++ = this->operator()(__urng, __param);
       }
 
-  template<typename _RealType>
+  template<typename _RealTp>
     template<typename _UniformRandomNumberGenerator>
-      typename von_mises_fisher_distribution<2, _RealType>::result_type
-      von_mises_fisher_distribution<2, _RealType>::
+      typename von_mises_fisher_distribution<2, _RealTp>::result_type
+      von_mises_fisher_distribution<2, _RealTp>::
       operator()(_UniformRandomNumberGenerator& __urng)
       {
-	using __res_t = typename von_mises_distribution<_RealType>::result_type;
+	using __res_t = typename von_mises_distribution<_RealTp>::result_type;
 	__res_t __vmd_res = _M_vmd(__urng);
 
 	result_type __res;
@@ -126,15 +126,15 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	return __res;
       }
 
-  template<typename _RealType>
+  template<typename _RealTp>
     template<typename _UniformRandomNumberGenerator>
-      typename von_mises_fisher_distribution<2, _RealType>::result_type
-      von_mises_fisher_distribution<2, _RealType>::
+      typename von_mises_fisher_distribution<2, _RealTp>::result_type
+      von_mises_fisher_distribution<2, _RealTp>::
       operator()(_UniformRandomNumberGenerator& __urng,
-		 const typename von_mises_fisher_distribution<2, _RealType>::param_type& __p)
+		 const typename von_mises_fisher_distribution<2, _RealTp>::param_type& __p)
       {
-	using __parm_t = typename von_mises_distribution<_RealType>::param_type;
-	using __res_t = typename von_mises_distribution<_RealType>::result_type;
+	using __parm_t = typename von_mises_distribution<_RealTp>::param_type;
+	using __res_t = typename von_mises_distribution<_RealTp>::result_type;
 	__parm_t __parm(__p._M_theta0);
 	__res_t __vmd_res = _M_vmd(__urng, __parm);
 
@@ -145,12 +145,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	return __res;
       }
 
-  template<typename _RealType>
+  template<typename _RealTp>
     template<typename _UniformRandomNumberGenerator>
-      typename von_mises_fisher_distribution<3, _RealType>::result_type
-      von_mises_fisher_distribution<3, _RealType>::
+      typename von_mises_fisher_distribution<3, _RealTp>::result_type
+      von_mises_fisher_distribution<3, _RealTp>::
       operator()(_UniformRandomNumberGenerator& __urng,
-		 const typename von_mises_fisher_distribution<3, _RealType>::param_type& __p)
+		 const typename von_mises_fisher_distribution<3, _RealTp>::param_type& __p)
       {
 	std::__detail::_Adaptor<_UniformRandomNumberGenerator,
 				typename result_type::value_type>
@@ -172,11 +172,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       }
 
 
-  template<std::size_t _Dim, typename _RealType,
+  template<std::size_t _Dim, typename _RealTp,
 	   typename _CharT, typename _Traits>
     std::basic_ostream<_CharT, _Traits>&
     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
-	       const von_mises_fisher_distribution<_Dim, _RealType>& __x)
+	       const von_mises_fisher_distribution<_Dim, _RealTp>& __x)
     {
       typedef std::basic_ostream<_CharT, _Traits>  __ostream_type;
       typedef typename __ostream_type::ios_base    __ios_base;
@@ -187,7 +187,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       const _CharT __space = __os.widen(' ');
       __os.flags(__ios_base::scientific | __ios_base::left);
       __os.fill(__space);
-      __os.precision(std::numeric_limits<_RealType>::max_digits10);
+      __os.precision(std::numeric_limits<_RealTp>::max_digits10);
 
       for (auto __k : __x.mu())
 	__os << __k << __space;
@@ -199,11 +199,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       return __os;
     }
 
-  template<typename _RealType,
+  template<typename _RealTp,
 	   typename _CharT, typename _Traits>
     std::basic_ostream<_CharT, _Traits>&
     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
-	       const von_mises_fisher_distribution<2, _RealType>& __x)
+	       const von_mises_fisher_distribution<2, _RealTp>& __x)
     {
       typedef std::basic_ostream<_CharT, _Traits>  __ostream_type;
       typedef typename __ostream_type::ios_base    __ios_base;
@@ -214,7 +214,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       const _CharT __space = __os.widen(' ');
       __os.flags(__ios_base::scientific | __ios_base::left);
       __os.fill(__space);
-      __os.precision(std::numeric_limits<_RealType>::max_digits10);
+      __os.precision(std::numeric_limits<_RealTp>::max_digits10);
 
       __os << __x.mu()[0] << __space << __x.mu()[1];
       __os << __space << __x.kappa();
@@ -225,11 +225,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       return __os;
     }
 
-  template<typename _RealType,
+  template<typename _RealTp,
 	   typename _CharT, typename _Traits>
     std::basic_ostream<_CharT, _Traits>&
     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
-	       const von_mises_fisher_distribution<3, _RealType>& __x)
+	       const von_mises_fisher_distribution<3, _RealTp>& __x)
     {
       typedef std::basic_ostream<_CharT, _Traits>  __ostream_type;
       typedef typename __ostream_type::ios_base    __ios_base;
@@ -240,7 +240,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       const _CharT __space = __os.widen(' ');
       __os.flags(__ios_base::scientific | __ios_base::left);
       __os.fill(__space);
-      __os.precision(std::numeric_limits<_RealType>::max_digits10);
+      __os.precision(std::numeric_limits<_RealTp>::max_digits10);
 
       __os << __x.mu()[0] << __space << __x.mu()[1] << __space << __x.mu()[2];
       __os << __space << __x.kappa();
@@ -251,11 +251,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       return __os;
     }
 
-  template<std::size_t _Dim, typename _RealType,
+  template<std::size_t _Dim, typename _RealTp,
 	   typename _CharT, typename _Traits>
     std::basic_istream<_CharT, _Traits>&
     operator>>(std::basic_istream<_CharT, _Traits>& __is,
-	       von_mises_fisher_distribution<_Dim, _RealType>& __x)
+	       von_mises_fisher_distribution<_Dim, _RealTp>& __x)
     {
       typedef std::basic_istream<_CharT, _Traits>  __istream_type;
       typedef typename __istream_type::ios_base    __ios_base;
@@ -263,22 +263,22 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       const typename __ios_base::fmtflags __flags = __is.flags();
       __is.flags(__ios_base::dec | __ios_base::skipws);
 
-      std::array<_RealType, _Dim> __mu;
+      std::array<_RealTp, _Dim> __mu;
       __is >> __mu;
-      _RealType __kappa;
+      _RealTp __kappa;
       __is >> __kappa;
-      __x.param(typename von_mises_fisher_distribution<_Dim, _RealType>::
+      __x.param(typename von_mises_fisher_distribution<_Dim, _RealTp>::
 		param_type(__mu, __kappa));
 
       __is.flags(__flags);
       return __is;
     }
 
-  template<typename _RealType,
+  template<typename _RealTp,
 	   typename _CharT, typename _Traits>
     std::basic_istream<_CharT, _Traits>&
     operator>>(std::basic_istream<_CharT, _Traits>& __is,
-	       von_mises_fisher_distribution<2, _RealType>& __x)
+	       von_mises_fisher_distribution<2, _RealTp>& __x)
     {
       typedef std::basic_istream<_CharT, _Traits>  __istream_type;
       typedef typename __istream_type::ios_base    __ios_base;
@@ -286,22 +286,22 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       const typename __ios_base::fmtflags __flags = __is.flags();
       __is.flags(__ios_base::dec | __ios_base::skipws);
 
-      std::array<_RealType, 2> __mu;
+      std::array<_RealTp, 2> __mu;
       __is >> __mu[0] >> __mu[1];
-      _RealType __kappa;
+      _RealTp __kappa;
       __is >> __kappa;
-      __x.param(typename von_mises_fisher_distribution<2, _RealType>::
+      __x.param(typename von_mises_fisher_distribution<2, _RealTp>::
 		param_type(__mu, __kappa));
 
       __is.flags(__flags);
       return __is;
     }
 
-  template<typename _RealType,
+  template<typename _RealTp,
 	   typename _CharT, typename _Traits>
     std::basic_istream<_CharT, _Traits>&
     operator>>(std::basic_istream<_CharT, _Traits>& __is,
-	       von_mises_fisher_distribution<3, _RealType>& __x)
+	       von_mises_fisher_distribution<3, _RealTp>& __x)
     {
       typedef std::basic_istream<_CharT, _Traits>  __istream_type;
       typedef typename __istream_type::ios_base    __ios_base;
@@ -309,11 +309,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       const typename __ios_base::fmtflags __flags = __is.flags();
       __is.flags(__ios_base::dec | __ios_base::skipws);
 
-      std::array<_RealType, 3> __mu;
+      std::array<_RealTp, 3> __mu;
       __is >> __mu[0] >> __mu[1] >> __mu[2];
-      _RealType __kappa;
+      _RealTp __kappa;
       __is >> __kappa;
-      __x.param(typename von_mises_fisher_distribution<3, _RealType>::
+      __x.param(typename von_mises_fisher_distribution<3, _RealTp>::
 		param_type(__mu, __kappa));
 
       __is.flags(__flags);

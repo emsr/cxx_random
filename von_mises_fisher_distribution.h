@@ -21,15 +21,15 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   namespace __detail
   {
-    template<std::size_t _Dim, typename _RealType>
-      constexpr _RealType
-      __modulus(const std::array<_RealType, _Dim> & __arr)
+    template<std::size_t _Dim, typename _RealTp>
+      constexpr _RealTp
+      __modulus(const std::array<_RealTp, _Dim> & __arr)
       {
-	_RealType __max = 1;
+	_RealTp __max = 1;
         for (const auto __comp : __arr)
 	  if (const auto __acomp = std::abs(__comp); __acomp > __max)
 	    __max = __acomp;
-	_RealType __mod = 0;
+	_RealTp __mod = 0;
         for (auto __comp : __arr)
 	  {
 	    __comp /= __max;
@@ -38,10 +38,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	return __max * std::sqrt(__mod);
       }
 
-    template<typename _RealType, std::size_t _Dim>
+    template<typename _RealTp, std::size_t _Dim>
       void
-      __make_basis(const std::array<_RealType, _Dim>& __mu,
-		   std::array<std::array<_RealType, _Dim>, _Dim - 1>& __lambda);
+      __make_basis(const std::array<_RealTp, _Dim>& __mu,
+		   std::array<std::array<_RealTp, _Dim>, _Dim - 1>& __lambda);
   }
 
   /**
@@ -69,33 +69,33 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    * <tr><td>Mean</td><td>@f$ \bold{\mu} @f$</td></tr>
    * </table>
    */
-  template<std::size_t _Dim, typename _RealType = double>
+  template<std::size_t _Dim, typename _RealTp = double>
     class von_mises_fisher_distribution
     {
-      static_assert(std::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealTp>::value,
 		    "template argument not a floating point type");
       static_assert(_Dim >= 2,
 		    "dimension template argument must be greater than one");
 
     public:
       /** The type of the range of the distribution. */
-      using result_type = std::array<_RealType, _Dim>;
+      using result_type = std::array<_RealTp, _Dim>;
       /** Parameter type. */
       struct param_type
       {
-	friend class von_mises_fisher_distribution<_Dim, _RealType>;
+	friend class von_mises_fisher_distribution<_Dim, _RealTp>;
 
 	explicit
-	param_type(std::array<_RealType, _Dim> __mu/* = make_array(1, 0...)*/,
-		   _RealType __kappa = _RealType(1))
+	param_type(std::array<_RealTp, _Dim> __mu/* = make_array(1, 0...)*/,
+		   _RealTp __kappa = _RealTp(1))
 	: _M_mu(__mu),
 	  _M_kappa(__kappa)
 	{
 	  _GLIBCXX_DEBUG_ASSERT(std::abs(__detail::__modulus(_M_mu) - 1)
-				 < std::numeric_limits<_RealType>::epsilon());
-	  _GLIBCXX_DEBUG_ASSERT(_M_kappa >= _RealType(0));
+				 < std::numeric_limits<_RealTp>::epsilon());
+	  _GLIBCXX_DEBUG_ASSERT(_M_kappa >= _RealTp(0));
 
-	  this->_M_Dim = _RealType(_Dim - 1);
+	  this->_M_Dim = _RealTp(_Dim - 1);
 	  auto __tau = std::sqrt(4 * this->_M_kappa * this->_M_kappa
 				   + this->_M_Dim * this->_M_Dim);
 	  this->_M_b = _M_Dim / (__tau + 2 * this->_M_kappa);
@@ -107,11 +107,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  __detail::__make_basis(this->_M_mu, this->_M_lambda);
 	}
 
-	std::array<_RealType, _Dim>
+	std::array<_RealTp, _Dim>
 	mu() const
 	{ return this->_M_mu; }
 
-	_RealType
+	_RealTp
 	kappa() const
 	{ return this->_M_kappa; }
 
@@ -121,13 +121,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		  && __p1._M_kappa == __p2._M_kappa); }
 
       private:
-	std::array<_RealType, _Dim> _M_mu;
-	std::array<std::array<_RealType, _Dim>, _Dim - 1> _M_lambda;
-	_RealType _M_kappa;
-	_RealType _M_Dim;
-	_RealType _M_b;
-	_RealType _M_c;
-	_RealType _M_x;
+	std::array<_RealTp, _Dim> _M_mu;
+	std::array<std::array<_RealTp, _Dim>, _Dim - 1> _M_lambda;
+	_RealTp _M_kappa;
+	_RealTp _M_Dim;
+	_RealTp _M_b;
+	_RealTp _M_c;
+	_RealTp _M_x;
       };
 
       /**
@@ -140,14 +140,14 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 						= result_type::value_type(1))
       : _M_param(__mu, __kappa),
 	_M_uosd(),
-	_M_bd(_RealType(_Dim - 1) / 2, _RealType(_Dim - 1) / 2)
+	_M_bd(_RealTp(_Dim - 1) / 2, _RealTp(_Dim - 1) / 2)
       { }
 
       explicit
       von_mises_fisher_distribution(const param_type& __p)
       : _M_param(__p),
 	_M_uosd(),
-	_M_bd(_RealType(_Dim - 1) / 2, _RealType(_Dim - 1) / 2)
+	_M_bd(_RealTp(_Dim - 1) / 2, _RealTp(_Dim - 1) / 2)
       { }
 
       /**
@@ -195,8 +195,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       result_type
       min() const
       {
-	constexpr auto __minv = -std::numeric_limits<_RealType>::max();
-        std::array<_RealType, _Dim> __arr;
+	constexpr auto __minv = -std::numeric_limits<_RealTp>::max();
+        std::array<_RealTp, _Dim> __arr;
         __arr.fill(__minv);
 	return __arr;
       }
@@ -207,8 +207,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       result_type
       max() const
       {
-	constexpr auto __maxv = std::numeric_limits<_RealType>::max();
-        std::array<_RealType, _Dim> __arr;
+	constexpr auto __maxv = std::numeric_limits<_RealTp>::max();
+        std::array<_RealTp, _Dim> __arr;
         __arr.fill(__maxv);
 	return __arr;
       }
@@ -268,11 +268,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The output stream with the state of @p __x inserted or in
        * an error state.
        */
-      template<std::size_t _Dim1, typename _RealType1,
+      template<std::size_t _Dim1, typename _RealTp1,
 	       typename _CharT, typename _Traits>
 	friend std::basic_ostream<_CharT, _Traits>&
 	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
-		   const von_mises_fisher_distribution<_Dim1, _RealType1>& __x);
+		   const von_mises_fisher_distribution<_Dim1, _RealTp1>& __x);
 
       /**
        * @brief Extracts a %von_mises_fisher_distribution random number distribution
@@ -283,11 +283,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *
        * @returns The input stream with @p __x extracted or in an error state.
        */
-      template<std::size_t _Dim1, typename _RealType1,
+      template<std::size_t _Dim1, typename _RealTp1,
 	       typename _CharT, typename _Traits>
 	friend std::basic_istream<_CharT, _Traits>&
 	operator>>(std::basic_istream<_CharT, _Traits>& __is,
-		   von_mises_fisher_distribution<_Dim1, _RealType1>& __x);
+		   von_mises_fisher_distribution<_Dim1, _RealTp1>& __x);
 
     private:
       template<typename _ForwardIterator,
@@ -298,17 +298,17 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 			const param_type& __p);
 
       param_type _M_param;
-      uniform_on_sphere_distribution<_Dim - 1, _RealType> _M_uosd;
-      beta_distribution<_RealType> _M_bd;
+      uniform_on_sphere_distribution<_Dim - 1, _RealTp> _M_uosd;
+      beta_distribution<_RealTp> _M_bd;
     };
 
   /**
    * @brief Return true if two von Mises - Fisher distributions are different.
    */
-  template<std::size_t _Dim, typename _RealType>
+  template<std::size_t _Dim, typename _RealTp>
     inline bool
-    operator!=(const von_mises_fisher_distribution<_Dim, _RealType>& __d1,
-	       const von_mises_fisher_distribution<_Dim, _RealType>& __d2)
+    operator!=(const von_mises_fisher_distribution<_Dim, _RealTp>& __d1,
+	       const von_mises_fisher_distribution<_Dim, _RealTp>& __d2)
     { return !(__d1 == __d2); }
 
 
@@ -318,38 +318,38 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *
    * This is the @c von_mises_distribution with a different interface.
    */
-  template<typename _RealType>
-    class von_mises_fisher_distribution<2, _RealType>
+  template<typename _RealTp>
+    class von_mises_fisher_distribution<2, _RealTp>
     {
-      static_assert(std::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealTp>::value,
 		    "template argument not a floating point type");
 
     public:
       /** The type of the range of the distribution. */
-      using result_type = std::array<_RealType, 2>;
+      using result_type = std::array<_RealTp, 2>;
       /** Parameter type. */
       struct param_type
       {
-	friend class von_mises_fisher_distribution<2, _RealType>;
+	friend class von_mises_fisher_distribution<2, _RealTp>;
 
 	explicit
-	param_type(std::array<_RealType, 2> __mu/* = make_array(1, 0)*/,
-		   _RealType __kappa = _RealType(1))
+	param_type(std::array<_RealTp, 2> __mu/* = make_array(1, 0)*/,
+		   _RealTp __kappa = _RealTp(1))
 	: _M_mu(__mu),
 	  _M_kappa(__kappa)
 	{
 	  _GLIBCXX_DEBUG_ASSERT(std::abs(__detail::__modulus(this->_M_mu) - 1)
-				 < std::numeric_limits<_RealType>::epsilon());
-	  _GLIBCXX_DEBUG_ASSERT(this->_M_kappa >= _RealType(0));
+				 < std::numeric_limits<_RealTp>::epsilon());
+	  _GLIBCXX_DEBUG_ASSERT(this->_M_kappa >= _RealTp(0));
 
 	  _M_theta0 = std::atan2(this->_M_mu[1], this->_M_mu[0]);
 	}
 
-	std::array<_RealType, 2>
+	std::array<_RealTp, 2>
 	mu() const
 	{ return _M_mu; }
 
-	_RealType
+	_RealTp
 	kappa() const
 	{ return _M_kappa; }
 
@@ -359,9 +359,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		  && __p1._M_kappa == __p2._M_kappa); }
 
       private:
-	std::array<_RealType, 2> _M_mu;
-	_RealType _M_kappa;
-	_RealType _M_theta0;
+	std::array<_RealTp, 2> _M_mu;
+	_RealTp _M_kappa;
+	_RealTp _M_theta0;
       };
 
       /**
@@ -418,7 +418,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       param(const param_type& __param)
       {
 	this->_M_param = __param;
-	typename von_mises_distribution<_RealType>::param_type
+	typename von_mises_distribution<_RealTp>::param_type
 	  __vmd(std::atan2(this->_M_param.mu()[1], this->_M_param.mu()[0]));
 	this->_M_vmd.param(__vmd);
       }
@@ -429,7 +429,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       result_type
       min() const
       {
-	constexpr auto __minv = -std::numeric_limits<_RealType>::max();
+	constexpr auto __minv = -std::numeric_limits<_RealTp>::max();
         result_type __arr;
         __arr.fill(__minv);
 	return __arr;
@@ -441,7 +441,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       result_type
       max() const
       {
-	constexpr auto __minv = -std::numeric_limits<_RealType>::max();
+	constexpr auto __minv = -std::numeric_limits<_RealTp>::max();
         result_type __arr;
         __arr.fill(__minv);
 	return __arr;
@@ -500,10 +500,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The output stream with the state of @p __x inserted or in
        * an error state.
        */
-      template<typename _RealType1, typename _CharT, typename _Traits>
+      template<typename _RealTp1, typename _CharT, typename _Traits>
 	friend std::basic_ostream<_CharT, _Traits>&
 	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
-		   const von_mises_fisher_distribution<2, _RealType1>& __x);
+		   const von_mises_fisher_distribution<2, _RealTp1>& __x);
 
       /**
        * @brief Extracts a %von_mises_fisher_distribution random number distribution
@@ -514,10 +514,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *
        * @returns The input stream with @p __x extracted or in an error state.
        */
-      template<typename _RealType1, typename _CharT, typename _Traits>
+      template<typename _RealTp1, typename _CharT, typename _Traits>
 	friend std::basic_istream<_CharT, _Traits>&
 	operator>>(std::basic_istream<_CharT, _Traits>& __is,
-		   von_mises_fisher_distribution<2, _RealType1>& __x);
+		   von_mises_fisher_distribution<2, _RealTp1>& __x);
 
     private:
       template<typename _ForwardIterator,
@@ -528,7 +528,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 			const param_type& __p);
 
       param_type _M_param;
-      von_mises_distribution<_RealType> _M_vmd;
+      von_mises_distribution<_RealTp> _M_vmd;
     };
 
 
@@ -538,40 +538,40 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *
    * This is the @c von_mises_distribution with a different interface.
    */
-  template<typename _RealType>
-    class von_mises_fisher_distribution<3, _RealType>
+  template<typename _RealTp>
+    class von_mises_fisher_distribution<3, _RealTp>
     {
-      static_assert(std::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealTp>::value,
 		    "template argument not a floating point type");
 
     public:
       /** The type of the range of the distribution. */
-      using result_type = std::array<_RealType, 3>;
+      using result_type = std::array<_RealTp, 3>;
       /** Parameter type. */
       struct param_type
       {
-	friend class von_mises_fisher_distribution<3, _RealType>;
+	friend class von_mises_fisher_distribution<3, _RealTp>;
 
 	explicit
-	param_type(std::array<_RealType, 3> __mu/* = make_array(1, 0, 0)*/,
-		   _RealType __kappa = _RealType(1))
+	param_type(std::array<_RealTp, 3> __mu/* = make_array(1, 0, 0)*/,
+		   _RealTp __kappa = _RealTp(1))
 	: _M_mu(__mu),
 	  _M_kappa(__kappa)
 	{
 	  _GLIBCXX_DEBUG_ASSERT(std::abs(__detail::__modulus(this->_M_mu) - 1)
-				 < std::numeric_limits<_RealType>::epsilon());
-	  _GLIBCXX_DEBUG_ASSERT(this->_M_kappa >= _RealType(0));
+				 < std::numeric_limits<_RealTp>::epsilon());
+	  _GLIBCXX_DEBUG_ASSERT(this->_M_kappa >= _RealTp(0));
 
 	  __detail::__make_basis(this->_M_mu, this->_M_lambda);
 
 	  _M_c = 0;
 	}
 
-	std::array<_RealType, 3>
+	std::array<_RealTp, 3>
 	mu() const
 	{ return this->_M_mu; }
 
-	_RealType
+	_RealTp
 	kappa() const
 	{ return this->_M_kappa; }
 
@@ -581,10 +581,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		  && __p1._M_kappa == __p2._M_kappa); }
 
       private:
-	std::array<_RealType, 3> _M_mu;
-	std::array<std::array<_RealType, 3>, 2> _M_lambda;
-	_RealType _M_kappa;
-	_RealType _M_c;
+	std::array<_RealTp, 3> _M_mu;
+	std::array<std::array<_RealTp, 3>, 2> _M_lambda;
+	_RealTp _M_kappa;
+	_RealTp _M_c;
       };
 
       /**
@@ -647,7 +647,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       result_type
       min() const
       {
-	constexpr auto __minv = -std::numeric_limits<_RealType>::max();
+	constexpr auto __minv = -std::numeric_limits<_RealTp>::max();
         result_type __arr;
         __arr.fill(__minv);
 	return __arr;
@@ -659,7 +659,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       result_type
       max() const
       {
-	constexpr auto __minv = -std::numeric_limits<_RealType>::max();
+	constexpr auto __minv = -std::numeric_limits<_RealTp>::max();
         result_type __arr;
         __arr.fill(__minv);
 	return __arr;
@@ -720,10 +720,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The output stream with the state of @p __x inserted or in
        * an error state.
        */
-      template<typename _RealType1, typename _CharT, typename _Traits>
+      template<typename _RealTp1, typename _CharT, typename _Traits>
 	friend std::basic_ostream<_CharT, _Traits>&
 	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
-		   const von_mises_fisher_distribution<3, _RealType1>& __x);
+		   const von_mises_fisher_distribution<3, _RealTp1>& __x);
 
       /**
        * @brief Extracts a %von_mises_fisher_distribution random number distribution
@@ -734,10 +734,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *
        * @returns The input stream with @p __x extracted or in an error state.
        */
-      template<typename _RealType1, typename _CharT, typename _Traits>
+      template<typename _RealTp1, typename _CharT, typename _Traits>
 	friend std::basic_istream<_CharT, _Traits>&
 	operator>>(std::basic_istream<_CharT, _Traits>& __is,
-		   von_mises_fisher_distribution<3, _RealType1>& __x);
+		   von_mises_fisher_distribution<3, _RealTp1>& __x);
 
     private:
       template<typename _ForwardIterator,
@@ -748,7 +748,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 			const param_type& __p);
 
       param_type _M_param;
-      uniform_on_sphere_distribution<2, _RealType> _M_uosd;
+      uniform_on_sphere_distribution<2, _RealTp> _M_uosd;
     };
 
 _GLIBCXX_END_NAMESPACE_VERSION
