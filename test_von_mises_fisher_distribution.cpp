@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 #include <experimental/array>
 
 #include "von_mises_fisher_distribution.h"
@@ -84,14 +85,12 @@ template<std::size_t _Dim, typename _RealType,
   operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 	     const std::array<_RealType, _Dim>& __x)
   {
-    __os << '(';
     for (auto __k = 0U; __k < _Dim; ++__k)
       {
 	if (__k > 0)
           __os << ',' << ' ';
 	__os << std::setw(12) << __x[__k];
       }
-    __os << ')';
     return __os;
   }
 
@@ -117,7 +116,7 @@ main()
     {
       auto dir2 = vmd2(re);
       mean2 += dir2;
-      std::cout << "  " << dir2 << "  " << norm(dir2) << '\n';
+      std::cout << " (" << dir2 << ") " << norm(dir2) << '\n';
     }
   mean2 /= 1000;
   std::cout << "  mean2 = " << mean2 << '\n';
@@ -125,6 +124,45 @@ main()
   std::cout << "  mean2 = " << mean2 << '\n';
   std::cout << "  vmd2 = " << vmd2 << '\n';
 
+  std::ofstream iv2("2d_rays.iv");
+  iv2 << "#Inventor V2.1 ascii\n";
+  iv2 << "Separator {\n";
+
+  iv2 << "  BaseColor {\n";
+  iv2 << "    rgb 0.0 0.0 1.0\n";
+  iv2 << "  }\n";
+  iv2 << "  Coordinate3 {\n";
+  iv2 << "    point [\n";
+  iv2 << "      0.0 0.0 0.0, " << mu2[0] << ' ' << mu2[1] << " 0.0\n";
+  iv2 << "    ]\n";
+  iv2 << "  }\n";
+  iv2 << "  LineSet {}\n";
+
+  iv2 << "  BaseColor {\n";
+  iv2 << "    rgb 1.0 0.0 0.0\n";
+  iv2 << "  }\n";
+  iv2 << "  Coordinate3 {\n";
+  iv2 << "    point [\n";
+  iv2 << "      0.0 0.0 0.0, " << lambda2[0][0] << ' ' << lambda2[0][1] << " 0.0\n";
+  iv2 << "    ]\n";
+  iv2 << "  }\n";
+  iv2 << "  LineSet {}\n";
+
+  iv2 << "  BaseColor {\n";
+  iv2 << "    rgb 1.0 1.0 0.0\n";
+  iv2 << "  }\n";
+  iv2 << "  Coordinate3 {\n";
+  iv2 << "    point [\n";
+  for (int i = 0; i < 1000; ++i)
+    {
+      auto dir2 = vmd2(re);
+      iv2 << "      0.0 0.0 0.0, " << dir2[0] << ' ' << dir2[1] << " 0.0\n";
+    }
+  iv2 << "    ]\n";
+  iv2 << "  }\n";
+  iv2 << "  LineSet {}\n";
+
+  iv2 << "}\n";
 
   std::cout << "\n\n  Dimension 3...\n\n";
 
@@ -153,6 +191,56 @@ main()
   mean3 = normal(mean3);
   std::cout << "  mean3 = " << mean3 << '\n';
   std::cout << "  vmd3 = " << vmd3 << '\n';
+
+  std::ofstream iv3("3d_rays.iv");
+  iv3 << "#Inventor V2.1 ascii\n";
+  iv3 << "Separator {\n";
+
+  iv3 << "  BaseColor {\n";
+  iv3 << "    rgb 0.0 0.0 1.0\n";
+  iv3 << "  }\n";
+  iv3 << "  Coordinate3 {\n";
+  iv3 << "    point [\n";
+  iv3 << "      0.0 0.0 0.0, " << mu3[0] << ' ' << mu3[1] << ' ' << mu3[2] << '\n';
+  iv3 << "    ]\n";
+  iv3 << "  }\n";
+  iv3 << "  LineSet {}\n";
+
+  iv3 << "  BaseColor {\n";
+  iv3 << "    rgb 1.0 0.0 0.0\n";
+  iv3 << "  }\n";
+  iv3 << "  Coordinate3 {\n";
+  iv3 << "    point [\n";
+  iv3 << "      0.0 0.0 0.0, " << lambda3[0][0] << ' ' << lambda3[0][1] << ' ' << lambda3[0][2] << '\n';
+  iv3 << "    ]\n";
+  iv3 << "  }\n";
+  iv3 << "  LineSet {}\n";
+
+  iv3 << "  BaseColor {\n";
+  iv3 << "    rgb 0.0 1.0 0.0\n";
+  iv3 << "  }\n";
+  iv3 << "  Coordinate3 {\n";
+  iv3 << "    point [\n";
+  iv3 << "      0.0 0.0 0.0, " << lambda3[1][0] << ' ' << lambda3[1][1] << ' ' << lambda3[1][2] << '\n';
+  iv3 << "    ]\n";
+  iv3 << "  }\n";
+  iv3 << "  LineSet {}\n";
+
+  iv3 << "  BaseColor {\n";
+  iv3 << "    rgb 1.0 1.0 0.0\n";
+  iv3 << "  }\n";
+  iv3 << "  Coordinate3 {\n";
+  iv3 << "    point [\n";
+  for (int i = 0; i < 1000; ++i)
+    {
+      auto dir3 = vmd3(re);
+      iv3 << "      0.0 0.0 0.0, " << dir3[0] << ' ' << dir3[1] << ' ' << dir3[2] << '\n';
+    }
+  iv3 << "    ]\n";
+  iv3 << "  }\n";
+  iv3 << "  LineSet {}\n";
+
+  iv3 << "}\n";
 
 
   std::cout << "\n\n  Dimension 4...\n\n";
