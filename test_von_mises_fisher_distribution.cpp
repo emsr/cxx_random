@@ -111,17 +111,19 @@ main()
             << "  " << norm(lambda2[0]) << '\n';
 
   __gnu_cxx::von_mises_fisher_distribution<2, double> vmd2(mu2, 100.0);
+  const int num_samples2 = 1000;
   std::array<double, 2> mean2;
-  for (auto i = 0; i < 1000; ++i)
+  for (auto i = 0; i < num_samples2; ++i)
     {
       auto dir2 = vmd2(re);
       mean2 += dir2;
       std::cout << " (" << dir2 << ") " << norm(dir2) << '\n';
     }
-  mean2 /= 1000;
-  std::cout << "  mean2 = " << mean2 << '\n';
+  mean2 /= num_samples2;
+  std::cout << "  mean2    = " << mean2 << '\n';
   mean2 = normal(mean2);
-  std::cout << "  mean2 = " << mean2 << '\n';
+  std::cout << "  meandir2 = " << mean2 << '\n';
+  std::cout << "  mu2      = " << mu2 << '\n';
   std::cout << "  vmd2 = " << vmd2 << '\n';
 
   std::ofstream iv2("2d_rays.iv");
@@ -153,7 +155,7 @@ main()
   iv2 << "  }\n";
   iv2 << "  Coordinate3 {\n";
   iv2 << "    point [\n";
-  for (int i = 0; i < 1000; ++i)
+  for (int i = 0; i < num_samples2; ++i)
     {
       auto dir2 = vmd2(re);
       iv2 << "      0.0 0.0 0.0, " << dir2[0] << ' ' << dir2[1] << " 0.0\n";
@@ -163,6 +165,7 @@ main()
   iv2 << "  LineSet {}\n";
 
   iv2 << "}\n";
+
 
   std::cout << "\n\n  Dimension 3...\n\n";
 
@@ -179,17 +182,19 @@ main()
     	      << "  " << norm(lambda3[k]) << "\n";
 
   __gnu_cxx::von_mises_fisher_distribution<3, double> vmd3(mu3, 100.0);
+  const int num_samples3 = 1000;
   std::array<double, 3> mean3;
-  for (auto i = 0; i < 1000; ++i)
+  for (auto i = 0; i < num_samples3; ++i)
     {
       auto dir3 = vmd3(re);
       mean3 += dir3;
       std::cout << "  " << dir3 << "  " << norm(dir3) << '\n';
     }
-  mean3 /= 1000;
-  std::cout << "  mean3 = " << mean3 << '\n';
+  mean3 /= num_samples3;
+  std::cout << "  mean3    = " << mean3 << '\n';
   mean3 = normal(mean3);
-  std::cout << "  mean3 = " << mean3 << '\n';
+  std::cout << "  meandir3 = " << mean3 << '\n';
+  std::cout << "  mu3      = " << mu3 << '\n';
   std::cout << "  vmd3 = " << vmd3 << '\n';
 
   std::ofstream iv3("3d_rays.iv");
@@ -231,7 +236,7 @@ main()
   iv3 << "  }\n";
   iv3 << "  Coordinate3 {\n";
   iv3 << "    point [\n";
-  for (int i = 0; i < 1000; ++i)
+  for (int i = 0; i < num_samples3; ++i)
     {
       auto dir3 = vmd3(re);
       iv3 << "      0.0 0.0 0.0, " << dir3[0] << ' ' << dir3[1] << ' ' << dir3[2] << '\n';
@@ -254,16 +259,18 @@ main()
     	      << "  " << norm(lambda4[k]) << '\n';
 
   __gnu_cxx::von_mises_fisher_distribution<4, double> vmd4(mu4, 100.0);
+  const int num_samples4 = 1000;
   std::array<double, 4> mean4;
-  for (auto i = 0; i < 1000; ++i)
+  for (auto i = 0; i < num_samples4; ++i)
     {
       auto dir4 = vmd4(re);
       mean4 += dir4;
       std::cout << "  " << dir4 << "  " << norm(dir4) << '\n';
     }
-  mean4 /= 1000;
-  std::cout << "  mean4 = " << mean4 << '\n';
+  mean4 /= num_samples4;
+  std::cout << "  mean4    = " << mean4 << '\n';
   mean4 = normal(mean4);
-  std::cout << "  mean4 = " << mean4 << '\n';
+  std::cout << "  meandir4 = " << mean4 << '\n';
+  std::cout << "  mu4      = " << mu4 << '\n';
   std::cout << "  vmd4 = " << vmd4 << '\n';
 }
