@@ -1,3 +1,6 @@
+#ifndef UNIFORM_INSIDE_SPHERE_DISTRIBUTION_TCC
+#define UNIFORM_INSIDE_SPHERE_DISTRIBUTION_TCC 1
+
 #pragma GCC system_header
 
 namespace __gnu_test //_GLIBCXX_VISIBILITY(default)
@@ -162,3 +165,5 @@ namespace __gnu_test //_GLIBCXX_VISIBILITY(default)
 
 //_GLIBCXX_END_NAMESPACE_VERSION
 } // namespace __gnu_test
+
+#endif // UNIFORM_INSIDE_SPHERE_DISTRIBUTION_TCC

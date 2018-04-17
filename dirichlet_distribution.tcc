@@ -1,3 +1,6 @@
+#ifndef DIRICHLET_DISTRIBUTION_TCC
+#define DIRICHLET_DISTRIBUTION_TCC 1
+
 #pragma GCC system_header
 
 namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
@@ -115,3 +118,5 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
 
 //_GLIBCXX_END_NAMESPACE_VERSION
 } // namespace __gnu_cxx
+
+#endif // DIRICHLET_DISTRIBUTION_TCC

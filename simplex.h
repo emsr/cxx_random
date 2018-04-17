@@ -2,18 +2,7 @@
 #define SIMPLEX_H 1
 
 #include <array>
-
-template<typename CharT, typename Traits, typename RealType>
-  std::basic_ostream<CharT,Traits>&
-  operator<<(std::basic_ostream<CharT, Traits>& __os,
-	     const std::array<RealType, 3>& __arr)
-  { return __os << ' ' << __arr[0] << ' ' << __arr[1] << ' ' << __arr[2]; }
-
-template<typename CharT, typename Traits, typename RealTp>
-  std::basic_ostream<CharT,Traits>&
-  operator<<(std::basic_ostream<CharT, Traits>& __os,
-	     const std::array<RealTp, 4>& __arr)
-  { return __os << ' ' << __arr[0] << ' ' << __arr[1] << ' ' << __arr[2] << ' ' << __arr[3]; }
+#include <cassert>
 
 template<typename RealTp>
   struct tri
@@ -40,56 +29,6 @@ template<typename RealTp>
     }
   };
 
-template<class RealTp = double>
-  RealTp
-  volume(const std::array<std::array<RealTp, 3>, 4>& tetra)
-  {
-    std::array<RealTp, 3> u, v, w;
-    for (auto c = 0; c < 3; ++c)
-      {
-	u[c] = tetra[1][c] - tetra[0][c];
-	v[c] = tetra[2][c] - tetra[0][c];
-	w[c] = tetra[3][c] - tetra[0][c];
-      }
-    return w[0] * (u[1] * v[2] - u[2] * v[1])
-	 + w[1] * (u[2] * v[0] - u[0] * v[2])
-	 + w[2] * (u[0] * v[1] - u[1] * v[0]);
-  }
-
-template<class RealTp = double>
-  std::array<RealTp, 4>
-  barycenter(const std::array<std::array<RealTp, 3>, 4>& tetra,
-	     const std::array<RealTp, 3>& point)
-  {
-    auto vol = volume(tetra);
-    std::array<RealTp, 4> bary;
-    for (auto v = 0; v < 4; ++v)
-      {
-	auto tet = tetra;
-	for (auto c = 0; c < 3; ++c)
-	  tet[v][c] = point[c];
-	bary[v] = volume(tet) / vol;
-      }
-
-    return bary;
-  }
-
-template<class RealTp = double>
-  bool
-  valid(const std::array<RealTp, 4>& bary)
-  {
-    const auto eps = RealTp{10} * std::numeric_limits<RealTp>::epsilon();
-    auto sum = RealTp{0};
-    for (int v = 0; v < 4; ++v)
-      {
-	if (bary[v] < RealTp{0} || bary[v] > RealTp{1})
-	  return false;
-        sum += bary[v];
-      }
-
-    return std::abs(sum - RealTp{1}) < eps;
-  }
-
 /**
  * A little tetrahedron class.
  */
@@ -103,7 +42,7 @@ template<typename RealTp>
      * Construct a tetrahedron with one vertex at the origin
      * and the other three at x = 1, y = 1, and z = 1 respectively.
      */
-    tetra()
+    constexpr tetra()
     : vert{{{0,0,0},{1,0,0},{0,1,0},{0,0,1}}}
     { }
 
@@ -114,11 +53,11 @@ template<typename RealTp>
      * a positive-volume tetrahedron so that in the usual right hand rule
      * convention all the triangle normals face outward from the tetrahedron.
      */
-    tetra(const std::array<RealTp, 3>& A,
-	  const std::array<RealTp, 3>& B,
-	  const std::array<RealTp, 3>& C,
-	  const std::array<RealTp, 3>& D)
-    : vert{A, B, C, D}
+    constexpr tetra(const std::array<RealTp, 3>& _A,
+		    const std::array<RealTp, 3>& _B,
+		    const std::array<RealTp, 3>& _C,
+		    const std::array<RealTp, 3>& _D)
+    : vert{_A, _B, _C, _D}
     { }
 
     /**
@@ -128,9 +67,12 @@ template<typename RealTp>
     operator()(const std::array<RealTp, 4>& bary) const
     {
       return {
-	bary[0] * vert[0][0] + bary[1] * vert[1][0] + bary[2] * vert[2][0] + bary[3] * vert[3][0],
-	bary[0] * vert[0][1] + bary[1] * vert[1][1] + bary[2] * vert[2][1] + bary[3] * vert[3][1],
-	bary[0] * vert[0][2] + bary[1] * vert[1][2] + bary[2] * vert[2][2] + bary[3] * vert[3][2]};
+	bary[0] * vert[0][0] + bary[1] * vert[1][0]
+      + bary[2] * vert[2][0] + bary[3] * vert[3][0],
+	bary[0] * vert[0][1] + bary[1] * vert[1][1]
+      + bary[2] * vert[2][1] + bary[3] * vert[3][1],
+	bary[0] * vert[0][2] + bary[1] * vert[1][2]
+      + bary[2] * vert[2][2] + bary[3] * vert[3][2]};
     }
 
     /**
@@ -169,6 +111,59 @@ template<typename RealTp>
 	   + w[1] * (u[2] * v[0] - u[0] * v[2])
 	   + w[2] * (u[0] * v[1] - u[1] * v[0]);
     }
+
+    std::array<RealTp, 4>
+    barycenter(const std::array<RealTp, 3>& point) const
+    {
+      auto vol = volume();
+      std::array<RealTp, 4> bary;
+      for (auto v = 0; v < 4; ++v)
+	{
+	  auto tet(*this);
+	  for (auto c = 0; c < 3; ++c)
+	    tet.vert[v][c] = point[c];
+	  bary[v] = tet.volume() / vol;
+	}
+
+      return bary;
+    }
   };
+
+// Tetrahedra filling the unit cube.
+template<class RealTp = double>
+  constexpr tetra<RealTp>
+  tetra0({{1, 1, 1}}, {{0, 0, 1}}, {{1, 0, 0}}, {{0, 1, 0}});
+
+template<class RealTp = double>
+  constexpr tetra<RealTp>
+  tetra1({{0, 0, 0}}, {{1, 0, 0}}, {{0, 1, 0}}, {{0, 0, 1}});
+
+template<class RealTp = double>
+  constexpr tetra<RealTp>
+  tetra2({{1, 0, 1}}, {{0, 0, 1}}, {{1, 0, 0}}, {{1, 1, 1}});
+
+template<class RealTp = double>
+  constexpr tetra<RealTp>
+  tetra3({{0, 1, 1}}, {{0, 1, 0}}, {{0, 0, 1}}, {{1, 1, 1}});
+
+template<class RealTp = double>
+  constexpr tetra<RealTp>
+  tetra4({{1, 1, 0}}, {{0, 1, 0}}, {{1, 0, 0}}, {{1, 1, 1}});
+
+template<std::size_t _Dim, typename RealTp = double>
+  bool
+  bary_in_simplex(const std::array<RealTp, _Dim>& bary)
+  {
+    const auto eps = RealTp{10} * std::numeric_limits<RealTp>::epsilon();
+    auto sum = RealTp{0};
+    for (int v = 0; v < _Dim; ++v)
+      {
+	if (bary[v] < RealTp{0} || bary[v] > RealTp{1})
+	  return false;
+        sum += bary[v];
+      }
+
+    return std::abs(sum - RealTp{1}) < eps;
+  }
 
 #endif // SIMPLEX_H

@@ -1,13 +1,12 @@
-#include <array>
-#include <type_traits>
-#include <ext/random>
-#include <ext/cmath>
-
-
 #ifndef VON_MISES_FISHER_DISTRIBUTION_H
 #define VON_MISES_FISHER_DISTRIBUTION_H 1
 
 #pragma GCC system_header
+
+#include <array>
+#include <type_traits>
+#include <ext/random>
+#include <ext/cmath>
 
 #if __cplusplus < 201103L
 # include <bits/c++0x_warning.h>
@@ -760,4 +759,4 @@ _GLIBCXX_END_NAMESPACE_VERSION
 
 #endif // C++11
 
-#endif // _VON_MISES_FISHER_DISTRIBUTION_H
+#endif // VON_MISES_FISHER_DISTRIBUTION_H

@@ -1,3 +1,6 @@
+#ifndef DIRICHLET_DISTRIBUTION_H
+#define DIRICHLET_DISTRIBUTION_H 1
+
 #pragma GCC system_header
 
 namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
@@ -187,14 +190,12 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
        *        the same parameters and the sequences that would
        *        be generated are equal.
        */
-      template<size_t _Dimen1, typename _RealTp1>
+      template<size_t _Dim1, typename _RealTp1>
 	friend bool
 	operator==(const
-		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealTp1>&
-		   __d1,
+		   __gnu_cxx::dirichlet_distribution<_Dim1, _RealTp1>& __d1,
 		   const
-		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealTp1>&
-		   __d2);
+		   __gnu_cxx::dirichlet_distribution<_Dim1, _RealTp1>& __d2);
 
       /**
        * @brief Inserts a %dirichlet_distribution random number distribution
@@ -206,13 +207,12 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
        * @returns The output stream with the state of @p __x inserted or in
        * an error state.
        */
-      template<size_t _Dimen1, typename _RealTp1,
+      template<size_t _Dim1, typename _RealTp1,
 	       typename _CharT, typename _Traits>
 	friend std::basic_ostream<_CharT, _Traits>&
 	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 		   const
-		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealTp1>&
-		   __x);
+		   __gnu_cxx::dirichlet_distribution<_Dim1, _RealTp1>& __x);
 
       /**
        * @brief Extracts a %dirichlet_distribution random number distribution
@@ -224,11 +224,11 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
        * @returns The input stream with @p __x extracted or in an error
        *          state.
        */
-      template<size_t _Dimen1, typename _RealTp1,
+      template<size_t _Dim1, typename _RealTp1,
 	       typename _CharT, typename _Traits>
 	friend std::basic_istream<_CharT, _Traits>&
 	operator>>(std::basic_istream<_CharT, _Traits>& __is,
-		   __gnu_cxx::dirichlet_distribution<_Dimen1, _RealTp1>&
+		   __gnu_cxx::dirichlet_distribution<_Dim1, _RealTp1>&
 		   __x);
 
     private:
@@ -249,13 +249,13 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
    */
   template<size_t _Dim, typename _RealTp>
     inline bool
-    operator!=(const __gnu_cxx::dirichlet_distribution<_Dim, _RealTp>&
-	       __d1,
-	       const __gnu_cxx::dirichlet_distribution<_Dim, _RealTp>&
-	       __d2)
+    operator!=(const __gnu_cxx::dirichlet_distribution<_Dim, _RealTp>& __d1,
+	       const __gnu_cxx::dirichlet_distribution<_Dim, _RealTp>& __d2)
     { return !(__d1 == __d2); }
 
 //_GLIBCXX_END_NAMESPACE_VERSION
 } // namespace __gnu_cxx
 
 #include "dirichlet_distribution.tcc"
+
+#endif // DIRICHLET_DISTRIBUTION_H

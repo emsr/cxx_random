@@ -1,6 +1,3 @@
-//
-//  COPYRIGHT:  Copyright 2010 - 2014
-//              Alion Science and Technology
 ///
 ///  \def  HISTOGRAM_H
 ///

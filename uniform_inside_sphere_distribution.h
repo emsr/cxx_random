@@ -1,9 +1,13 @@
+#ifndef UNIFORM_INSIDE_SPHERE_DISTRIBUTION_H
+#define UNIFORM_INSIDE_SPHERE_DISTRIBUTION_H 1
+
+#pragma GCC system_header
+
 #include <ext/random>
 
 namespace __gnu_test //_GLIBCXX_VISIBILITY(default)
 {
 //_GLIBCXX_BEGIN_NAMESPACE_VERSION
-
 
   /**
    * @brief A distribution for random coordinates inside a unit sphere.
@@ -223,3 +227,5 @@ namespace __gnu_test //_GLIBCXX_VISIBILITY(default)
 } // namespace __gnu_test
 
 #include "uniform_inside_sphere_distribution.tcc"
+
+#endif // UNIFORM_INSIDE_SPHERE_DISTRIBUTION_H
