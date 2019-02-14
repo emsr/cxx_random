@@ -1,13 +1,14 @@
-// /home/ed/bin/bin/g++ -std=c++17 -o test_uniform_inside_sphere_distribution test_uniform_inside_sphere_distribution.cpp
-
-// LD_LIBRARY_PATH=/home/ed/bin/lib64:$LD_LIBRARY_PATH ./test_uniform_inside_sphere_distribution
+/*
+/home/ed/bin/bin/g++ -std=c++17 -g -Iinclude -o test_uniform_inside_sphere_distribution test_uniform_inside_sphere_distribution.cpp
+LD_LIBRARY_PATH=/home/ed/bin/lib64:$LD_LIBRARY_PATH ./test_uniform_inside_sphere_distribution
+*/
 
 #include <iostream>
 #include <fstream>
 #include <functional>
 #include <regex>
 
-#include "uniform_inside_sphere_distribution.h"
+#include <ext/uniform_inside_sphere_distribution.h>
 
 const char* header =
 R"(#Inventor V2.1 ascii

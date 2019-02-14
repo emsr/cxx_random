@@ -226,6 +226,6 @@ namespace __gnu_test //_GLIBCXX_VISIBILITY(default)
 //_GLIBCXX_END_NAMESPACE_VERSION
 } // namespace __gnu_test
 
-#include "uniform_inside_sphere_distribution.tcc"
+#include <ext/uniform_inside_sphere_distribution.tcc>
 
 #endif // UNIFORM_INSIDE_SPHERE_DISTRIBUTION_H

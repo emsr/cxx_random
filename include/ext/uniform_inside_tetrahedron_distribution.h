@@ -4,7 +4,7 @@
 #pragma GCC system_header
 
 #include <ext/random>
-#include "simplex.h"
+#include <ext/simplex.h>
 
 namespace __gnu_test //_GLIBCXX_VISIBILITY(default)
 {

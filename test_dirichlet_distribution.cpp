@@ -1,11 +1,15 @@
+/*
+$HOME/bin/bin/g++ -std=gnu++11 -g -Iinclude -Wall -Wextra -o test_dirichlet_distribution test_dirichlet_distribution.cpp
+*/
+
 #include <ext/random>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 
-#include "dirichlet_distribution.h"
+#include <ext/dirichlet_distribution.h>
+#include <ext/simplex.h>
 #include "test_simplex.h"
-#include "simplex.h"
 
 template<typename RealType = double>
   void

@@ -256,6 +256,6 @@ namespace __gnu_cxx //_GLIBCXX_VISIBILITY(default)
 //_GLIBCXX_END_NAMESPACE_VERSION
 } // namespace __gnu_cxx
 
-#include "dirichlet_distribution.tcc"
+#include <ext/dirichlet_distribution.tcc>
 
 #endif // DIRICHLET_DISTRIBUTION_H

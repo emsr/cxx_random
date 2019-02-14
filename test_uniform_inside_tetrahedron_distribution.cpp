@@ -1,5 +1,5 @@
 /*
-$HOME/bin/bin/g++ -std=gnu++11 -g -Wall -Wextra -o test_uniform_inside_tetrahedron_distribution test_uniform_inside_tetrahedron_distribution.cpp
+$HOME/bin/bin/g++ -std=gnu++11 -g -Iinclude -Wall -Wextra -o test_uniform_inside_tetrahedron_distribution test_uniform_inside_tetrahedron_distribution.cpp
 */
 
 #include <random>
@@ -9,7 +9,7 @@ $HOME/bin/bin/g++ -std=gnu++11 -g -Wall -Wextra -o test_uniform_inside_tetrahedr
 #include <fstream>
 
 #include "test_simplex.h"
-#include "uniform_inside_tetrahedron_distribution.h"
+#include <ext/uniform_inside_tetrahedron_distribution.h>
 
 int
 main()

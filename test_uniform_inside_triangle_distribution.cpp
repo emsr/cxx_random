@@ -1,5 +1,5 @@
 /*
-$HOME/bin/bin/g++ -std=gnu++11 -g -Wall -Wextra -o test_uniform_inside_triangle_distribution test_uniform_inside_triangle_distribution.cpp
+$HOME/bin/bin/g++ -std=gnu++11 -g -Iinclude -Wall -Wextra -o test_uniform_inside_triangle_distribution test_uniform_inside_triangle_distribution.cpp
 */
 
 #include <random>
@@ -8,7 +8,7 @@ $HOME/bin/bin/g++ -std=gnu++11 -g -Wall -Wextra -o test_uniform_inside_triangle_
 #include <fstream>
 
 #include "test_simplex.h"
-#include "uniform_inside_triangle_distribution.h"
+#include <ext/uniform_inside_triangle_distribution.h>
 
 
 int

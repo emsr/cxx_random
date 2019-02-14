@@ -1,11 +1,11 @@
-// /home/ed/bin/bin/g++ -std=gnu++17 -o test_von_mises_fisher_distribution test_von_mises_fisher_distribution.cpp
+// /home/ed/bin/bin/g++ -std=gnu++17 -g -Iinclude -o test_von_mises_fisher_distribution test_von_mises_fisher_distribution.cpp
 
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <experimental/array>
 
-#include "von_mises_fisher_distribution.h"
+#include <ext/von_mises_fisher_distribution.h>
 
 template<typename Tp, size_t Dim>
   std::array<Tp, Dim>
