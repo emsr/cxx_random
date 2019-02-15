@@ -1,4 +1,7 @@
 # random
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/33ca06d11d0245a29d11c54fae41b2ba)](https://app.codacy.com/app/emsr/cxx_random?utm_source=github.com&utm_medium=referral&utm_content=emsr/cxx_random&utm_campaign=Badge_Grade_Dashboard)
+
 Build new C++ &lt;random&gt; facilities.
 
 Check this:
