@@ -1,4 +1,7 @@
 
+CXX_INST_DIR = $(HOME)/bin
+CXX_LIB_DIR = $(HOME)/bin/lib64
+
 INC_DIR = include/ext
 
 TEST_BIN_DIR = bin
@@ -28,11 +31,11 @@ $(TEST_BIN_DIR)/test_dirichlet_distribution: test_dirichlet_distribution.cpp $(I
 	$(HOME)/bin/bin/g++ -std=gnu++17 -Iinclude -g -Wall -Wextra -o $(TEST_BIN_DIR)/test_dirichlet_distribution test_dirichlet_distribution.cpp
 
 test: $(TEST_OUT_DIR)
-	./$(TEST_BIN_DIR)/test_uniform_inside_sphere_distribution > $(TEST_OUT_DIR)/test_uniform_inside_sphere_distribution.txt
-	./$(TEST_BIN_DIR)/test_uniform_inside_triangle_distribution > $(TEST_OUT_DIR)/test_uniform_inside_triangle_distribution.txt
-	./$(TEST_BIN_DIR)/test_uniform_inside_tetrahedron_distribution > $(TEST_OUT_DIR)/test_uniform_inside_tetrahedron_distribution.txt
-	./$(TEST_BIN_DIR)/test_von_mises_fisher_distribution > $(TEST_OUT_DIR)/test_von_mises_fisher_distribution.txt
-	./$(TEST_BIN_DIR)/test_dirichlet_distribution > $(TEST_OUT_DIR)/test_dirichlet_distribution.txt
+	LD_LIBRARY_PATH=$(CXX_LIB_DIR):$$LD_LIBRARY_PATH ./$(TEST_BIN_DIR)/test_uniform_inside_sphere_distribution > $(TEST_OUT_DIR)/test_uniform_inside_sphere_distribution.txt
+	LD_LIBRARY_PATH=$(CXX_LIB_DIR):$$LD_LIBRARY_PATH ./$(TEST_BIN_DIR)/test_uniform_inside_triangle_distribution > $(TEST_OUT_DIR)/test_uniform_inside_triangle_distribution.txt
+	LD_LIBRARY_PATH=$(CXX_LIB_DIR):$$LD_LIBRARY_PATH ./$(TEST_BIN_DIR)/test_uniform_inside_tetrahedron_distribution > $(TEST_OUT_DIR)/test_uniform_inside_tetrahedron_distribution.txt
+	LD_LIBRARY_PATH=$(CXX_LIB_DIR):$$LD_LIBRARY_PATH ./$(TEST_BIN_DIR)/test_von_mises_fisher_distribution > $(TEST_OUT_DIR)/test_von_mises_fisher_distribution.txt
+	LD_LIBRARY_PATH=$(CXX_LIB_DIR):$$LD_LIBRARY_PATH ./$(TEST_BIN_DIR)/test_dirichlet_distribution > $(TEST_OUT_DIR)/test_dirichlet_distribution.txt
 
 clean:
 	rm -rf $(TEST_BIN_DIR)/*

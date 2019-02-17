@@ -1,0 +1,26 @@
+cmake_minimum_required (VERSION 3.2.0)
+
+project(
+  math_const
+  VERSION 0.5.0
+  LANGUAGES CXX
+)
+
+include_directories(include)
+
+set(CMAKE_CXX_STANDARD 17)
+
+add_executable(test_dirichlet_distribution test_dirichlet_distribution.cpp)
+target_include_directories(test_dirichlet_distribution PRIVATE include)
+
+add_executable(test_uniform_inside_sphere_distribution test_uniform_inside_sphere_distribution.cpp)
+target_include_directories(test_uniform_inside_sphere_distribution PRIVATE include)
+
+add_executable(test_uniform_inside_tetrahedron_distribution test_uniform_inside_tetrahedron_distribution.cpp)
+target_include_directories(test_uniform_inside_tetrahedron_distribution PRIVATE include)
+
+add_executable(test_uniform_inside_triangle_distribution test_uniform_inside_triangle_distribution.cpp)
+target_include_directories(test_uniform_inside_triangle_distribution PRIVATE include)
+
+add_executable(test_von_mises_fisher_distribution test_von_mises_fisher_distribution.cpp)
+target_include_directories(test_von_mises_fisher_distribution PRIVATE include)

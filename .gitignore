@@ -5,3 +5,9 @@ test_output/*
 viewer
 
 *.iv
+
+test_dirichlet_distribution
+test_uniform_inside_sphere_distribution
+test_uniform_inside_tetrahedron_distribution
+test_uniform_inside_triangle_distribution
+test_von_mises_fisher_distribution
